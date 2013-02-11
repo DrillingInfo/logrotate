@@ -18,6 +18,11 @@ include /etc/logrotate.d
     <% config['values'].each do | k, v | -%>
     <%= k %> <%= v %>
     <% end -%>
+    <% config['scripts'].each do | scripttype, body | -%>
+    <%= scripttype %>
+    <%= body %>
+    endscript
+    <% end -%>
 }
 
 <% end -%>
