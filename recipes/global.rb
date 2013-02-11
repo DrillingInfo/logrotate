@@ -39,6 +39,10 @@ def values
     ]
 end
 
+def scripts
+    [ 'firstaction', 'prerotate', 'postrotate', 'lastaction', ]
+end
+
 def directives_and_values 
     directives + values
 end
@@ -51,11 +55,25 @@ def values_from hash
     hash.select { |k| values.include? k }
 end
 
+def scripts_from hash
+    defined_scripts = hash.select { |k| scripts.include? k }
+    defined_scripts.inject({}) do | accum_scripts, (script, lines) |
+        if lines.respond_to? :join
+            accum_scripts[script] = lines.join "\n"
+        else
+            accum_scripts[script] = lines
+        end
+
+        accum_scripts
+    end
+end
+
 def paths_from hash
     hash.select { |k| !(directives_and_values.include? k) }.inject({}) do | accum_paths, (path, config) |
         accum_paths[path] = {
             'directives' => directives_from(config),
-            'values' => values_from(config)
+            'values' => values_from(config),
+            'scripts' => scripts_from(config)
         }
 
         accum_paths
