@@ -48,7 +48,7 @@ def directives_and_values
 end
 
 def directives_from hash
-    hash.select { |k| directives.include? k }.keys
+    hash.select { |k, v| directives.include? k && v }.keys
 end
 
 def values_from hash
